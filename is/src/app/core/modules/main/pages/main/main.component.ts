@@ -1,18 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-
-import { Select, Store } from '@ngxs/store';
-
-import { untilDestroyed } from 'ngx-take-until-destroy';
-
-import { Observable } from 'rxjs';
-import { filter } from 'rxjs/operators';
-
-import { SocketService } from 'app/core/services/socket.service';
-import { Logout } from 'app/core/state/auth-state/auth.actions';
-import { AuthState } from 'app/core/state/auth-state/auth.state';
-
-import { IUser } from 'lib/interfaces/user.interface';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+
+import { Logout } from 'app/core/state/auth-state/auth.actions';
+
+import { Store } from '@ngxs/store';
 
 @Component({
   selector: 'app-main',
@@ -20,71 +12,65 @@ import { Router } from '@angular/router';
   styleUrls: ['main.component.scss']
 })
 export class MainPageComponent implements OnInit, OnDestroy {
-  @Select(AuthState.user) private user$: Observable<IUser>;
+  public form: FormGroup;
 
-  public userId: string;
-  public date: string;
-  public weather: any;
-  public image: string | null;
-  public scheduleMessage: string;
-  public coordinates: { lat: number; lng: number };
-
-  constructor(private socketService: SocketService, private store: Store, private router: Router) {}
+  constructor(private store: Store, private router: Router, private formBuilder: FormBuilder) {}
 
   public ngOnInit() {
-    this.user$
-      .pipe(
-        filter(user => !!user),
-        untilDestroyed(this)
-      )
-      .subscribe(user => {
-        this.userId = user.id;
-      });
-
-    this.socketService
-      .listen('date')
-      .pipe(untilDestroyed(this))
-      .subscribe((data: string) => {
-        this.date = data;
-      });
-
-    this.socketService
-      .listen('weather')
-      .pipe(untilDestroyed(this))
-      .subscribe((data: any) => {
-        this.weather = data;
-      });
-
-    this.socketService
-      .listen('image')
-      .pipe(untilDestroyed(this))
-      .subscribe((data: string) => {
-        if (!data) {
-          this.image = null;
-        } else {
-          this.image = `assets/images/${data}.png`;
-        }
-      });
-
-    this.socketService
-      .listen('schedule')
-      .pipe(untilDestroyed(this))
-      .subscribe((data: string) => {
-        this.scheduleMessage = data;
-      });
+    this.createForm();
   }
 
-  public ngOnDestroy() {
-    this.socketService.emit('leaveRoom', this.userId);
-  }
+  public ngOnDestroy() {}
 
-  public getUserPosition() {
-    navigator.geolocation.getCurrentPosition(position => {
-      this.coordinates = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude
-      };
+  private createForm() {
+    this.form = this.formBuilder.group({
+      // Revenues/expenses and property
+      salary: null,
+      spouseSalary: null,
+      otherRevenues: null,
+      totalPropertyCost: null,
+      totalCarCost: null,
+      mandatoryPayments: null,
+
+      // Employment
+      totalWorkExperience: null,
+      numberOfPositions: null,
+      occupation: '',
+      position: '',
+      jobType: '',
+      workExperience: null,
+
+      // Personal information
+      name: '',
+      dateOfBirth: '',
+      sex: '',
+      familyStatus: '',
+      childrenCount: null,
+      citizenship: '',
+      city: '',
+      education: '',
+      lengthOfStay: null,
+
+      // Credit info
+      loanRepayments: null,
+      activeLoans: null,
+
+      // Additional info
+      earlyPayment: false,
+      currentBankLoans: false,
+      guarantorsAvailability: false,
+      debts: false,
+
+      // Loan data
+      sum: null,
+      term: null,
+      interestRate: null,
+      livingWage: null
     });
+  }
+
+  public onClearClientForm(fields) {
+    this.form.patchValue(fields);
   }
 
   public onLogout() {
@@ -92,4 +78,24 @@ export class MainPageComponent implements OnInit, OnDestroy {
       this.router.navigate(['/auth/login']);
     });
   }
+
+  // public onCalculateRating() {
+  //   let NewLivingWage = +this.state.livingWage * +this.state.familyMembers;
+  //   let NewNetIncome = +this.state.salary * 0.87 - +this.state.communalPayments -
+  //       NewLivingWage + +this.state.additionalIncome;
+  //   let NewSolvency = (NewNetIncome * 0.6) * +this.state.month;
+  //   let NewMaxCredit;
+  //   let scoreSumm = +this.state.marriage + +this.state.position + +this.state.property +
+  //       +this.state.car +
+  //       +this.state.debt + +this.state.education + +this.state.citizenship + +this.state.existingLoans;
+
+  //   if (NewSolvency > 0) {
+  //       NewMaxCredit = NewSolvency / (1 + (+this.state.month + 1) * +this.state.creditPercent / 2400);
+  //       scoreSumm += 1;
+
+  //   } else {
+  //       NewMaxCredit = 0;
+  //   }
+
+  // }
 }

@@ -2,6 +2,18 @@
   &__container {
     padding: 24px;
     position: relative;
+    top: 64px;
+  }
+
+  &__spacer {
+    flex: 1 1 auto;
+  }
+
+  &__toolbar {
+    background: rgba(242, 245, 247, 1);
+    position: fixed;
+    z-index: 100;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
   }
 
   &__loader {
@@ -19,13 +31,34 @@
   &__text-loader {
     margin-bottom: 16px;
   }
+
+  &__cards {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: flex-start;
+  }
+
+  &__card {
+    &_client {
+      width: 680px;
+    }
+
+    &_loan {
+      width: 300px;
+    }
+
+    &_score {
+      width: 300px;
+    }
+  }
+
+  &__card-header {
+    font-size: 26px;
+    font-weight: 500;
+    margin: 0 0 26px 0;
+  }
 }
 
-h2 {
-  display: flex;
-  align-items: center;
-  span {
-    color: rgba(127, 138, 159, 1);
-    margin-right: 6px;
-  }
+.main__card:not(:last-child) {
+  margin-right: 24px;
 }

@@ -1,0 +1,40 @@
+.result-form {
+  &__section {
+    margin-bottom: 8px;
+  }
+
+  &__section-header {
+    margin: 0 0 4px !important;
+    font-weight: 500;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+  }
+
+  &__action:first-child {
+    margin-right: 6px;
+  }
+
+  &__progress-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 190px;
+  }
+
+  &__sections-container {
+    margin-top: 16px;
+  }
+
+  &__result {
+    font-size: 28px;
+    line-height: 33px;
+    letter-spacing: 0.01em;
+    position: absolute;
+    margin: 0;
+    margin-left: 8px;
+    font-weight: 500;
+  }
+}

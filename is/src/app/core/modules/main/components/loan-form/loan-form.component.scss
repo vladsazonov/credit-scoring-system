@@ -1,0 +1,31 @@
+.loan-form {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  &__section {
+    width: 300px;
+    margin-bottom: 8px;
+  }
+
+  &__section-header {
+    margin: 0 0 4px !important;
+  }
+
+  &__field {
+    width: 100%;
+
+    .mat-form-field-wrapper {
+      padding: 4px;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+  }
+
+  &__action:first-child {
+    margin-right: 6px;
+  }
+}

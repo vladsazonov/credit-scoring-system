@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
 
+import { environment } from 'environments/environment';
+
 import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
 import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
 import { NgxsModule } from '@ngxs/store';
-import { environment } from 'environments/environment';
-
-import { AuthService } from './services/auth.service';
-import { SocketService } from './services/socket.service';
 
 import { AuthState } from './state/auth-state/auth.state';
+
+import { AuthService } from './services/auth.service';
 
 @NgModule({
   imports: [
@@ -18,6 +18,6 @@ import { AuthState } from './state/auth-state/auth.state';
     }),
     NgxsRouterPluginModule.forRoot()
   ],
-  providers: [AuthService, SocketService]
+  providers: [AuthService]
 })
 export class CoreModule {}

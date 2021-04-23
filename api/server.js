@@ -14,6 +14,10 @@ const authUsers = [];
 app.use(bodyParser.json());
 app.use(express.static(process.cwd() + "/is/dist/is/"));
 
+// app.get('/api/questions', (req, res) => {
+//   res.json(questions);
+// });
+
 app.post("/api/login", (req, res) => {
   const user = users.find(
     (user) =>

@@ -1,10 +1,30 @@
 <mat-toolbar class="main__toolbar">
-  <span>Socket app</span>
+  <mat-icon>menu</mat-icon>
   <span class="main__spacer"></span>
+
+  <span>Scoring.Me</span>
+  <span class="main__spacer"></span>
+
   <button mat-button (click)="onLogout()">выйти</button>
 </mat-toolbar>
 
 <div class="main__container">
+  <div class="main__cards">
+    <mat-card class="main__card main__card_client">
+      <h2 class="main__card-header">Данные клиента</h2>
+      <app-client-form [form]="form" (clearClientForm)="onClearClientForm($event)"></app-client-form>
+    </mat-card>
+
+    <mat-card class="main__card main__card_loan">
+      <h2 class="main__card-header">Займ</h2>
+      <app-loan-form [form]="form" (clearClientForm)="onClearClientForm($event)"></app-loan-form>
+    </mat-card>
+
+    <mat-card class="main__card main__card_score">
+      <h2 class="main__card-header">Скоринговый анализ</h2>
+      <app-result-form></app-result-form>
+    </mat-card>
+  </div>
   <!-- <ng-template #weatherLoading>
       <div class="main__text-loader">
         <ngx-skeleton-loader
