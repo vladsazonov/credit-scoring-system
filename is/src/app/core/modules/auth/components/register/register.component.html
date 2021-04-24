@@ -1,32 +1,43 @@
-<mat-card class="login__card mat-elevation-z8">
-  <h2>Регистарция</h2>
-  <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <mat-form-field appearance="outline" class="login__field">
-      <mat-label>Email</mat-label>
-      <input required type="email" matInput placeholder="Placeholder" formControlName="email" />
-      <mat-icon matSuffix>person</mat-icon>
-      <mat-error *ngIf="form.get('email').hasError('email')">Введите корректный email</mat-error>
-      <mat-error *ngIf="form.get('email').hasError('required')">Введите email</mat-error>
-    </mat-form-field>
+<mat-card class="register__card mat-elevation-z8">
+  <div class="register__image">
+    <img src="../../../../../../assets/icons/splash.svg" class="register__logo" />
+  </div>
+  <div class="register__form-container">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <h2>Создать</h2>
+      <mat-form-field appearance="outline" class="register__field">
+        <mat-label>Email</mat-label>
+        <input required type="email" matInput placeholder="Placeholder" formControlName="email" />
+        <mat-icon matSuffix class="register__icon">person</mat-icon>
+        <mat-error *ngIf="form.get('email').hasError('email')">Введите корректный email</mat-error>
+        <mat-error *ngIf="form.get('email').hasError('required')">Введите email</mat-error>
+      </mat-form-field>
 
-    <mat-form-field appearance="outline" class="login__field">
-      <mat-label>Пароль</mat-label>
-      <input required type="password" matInput placeholder="Placeholder" formControlName="password" />
-      <mat-icon matSuffix>vpn_key</mat-icon>
-      <mat-error>Введите пароль</mat-error>
-    </mat-form-field>
-    <button mat-flat-button color="primary" type="submit" class="login__button" [disabled]="loading$ | async">
-      создать
-    </button>
-    <button
-      mat-button
-      type="button"
-      class="login__button login__button_registration"
-      [disabled]="loading$ | async"
-      [routerLink]="['/auth/login']"
-    >
-      войти
-    </button>
-  </form>
-  <mat-progress-bar *ngIf="loading$ | async" mode="indeterminate" color="primary"></mat-progress-bar>
+      <mat-form-field appearance="outline" class="register__field">
+        <mat-label>Пароль</mat-label>
+        <input required type="password" matInput placeholder="Placeholder" formControlName="password" />
+        <mat-icon matSuffix class="register__icon">vpn_key</mat-icon>
+        <mat-error>Введите пароль</mat-error>
+      </mat-form-field>
+      <button
+        mat-flat-button
+        color="primary"
+        type="submit"
+        class="register__button register__button_log-in"
+        [disabled]="loading$ | async"
+      >
+        создать
+      </button>
+      <button
+        mat-button
+        type="button"
+        class="register__button register__button_registration"
+        [disabled]="loading$ | async"
+        [routerLink]="['/auth/login']"
+      >
+        войти
+      </button>
+      <mat-progress-bar *ngIf="loading$ | async" mode="indeterminate" color="primary"></mat-progress-bar>
+    </form>
+  </div>
 </mat-card>

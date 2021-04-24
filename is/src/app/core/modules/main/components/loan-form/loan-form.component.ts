@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
+import { isFormInvalid, markAllFieldsAsTouched } from 'lib/utils';
+
 @Component({
   selector: 'app-loan-form',
   templateUrl: 'loan-form.component.html',
@@ -10,7 +12,8 @@ import { FormGroup } from '@angular/forms';
 export class LoanFormComponent implements OnInit {
   @Input() public form: FormGroup;
 
-  @Output() public clearClientForm = new EventEmitter();
+  @Output() public clearLoanForm = new EventEmitter();
+  @Output() public calculateRating = new EventEmitter();
 
   public defaultFormData = {
     sum: null,
@@ -22,4 +25,14 @@ export class LoanFormComponent implements OnInit {
   constructor() {}
 
   public ngOnInit() {}
+
+  public onSubmit() {
+    markAllFieldsAsTouched(this.form);
+
+    if (isFormInvalid(this.form)) {
+      return;
+    }
+
+    this.calculateRating.emit();
+  }
 }

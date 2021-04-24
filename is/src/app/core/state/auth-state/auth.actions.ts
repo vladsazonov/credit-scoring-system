@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { IAuthData } from 'lib/interfaces/auth-data';
+
+import { IAuthData } from 'lib/interfaces/auth-data.interface';
 
 export class Login {
   public static readonly type = '[Auth] Login';

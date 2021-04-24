@@ -1,19 +1,17 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+
+import { IResultData } from 'lib/interfaces';
 
 @Component({
   selector: 'app-result-form',
   templateUrl: 'result-form.component.html',
-  styleUrls: ['result-form.component.scss']
+  styleUrls: ['result-form.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class ResultFormComponent implements OnInit {
-  public form: FormGroup;
+  @Input() public resultData: IResultData;
 
-  constructor(private formBuilder: FormBuilder) {}
+  constructor() {}
 
   public ngOnInit() {}
-
-  public clearClientForm() {
-    this.form.reset();
-  }
 }

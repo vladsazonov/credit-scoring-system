@@ -1,1 +1,6 @@
-export const FAMILY_STATUSES = ['женат/замужем', 'разведен/разведена', 'вдова/вдовец', 'не женат/не замужем'];
+export const FAMILY_STATUSES = [
+  { name: 'женат/замужем', coefficient: 30 },
+  { name: 'разведен/разведена', coefficient: 10 },
+  { name: 'вдова/вдовец', coefficient: 25 },
+  { name: 'не женат/не замужем', coefficient: 15 }
+];

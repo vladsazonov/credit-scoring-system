@@ -1,4 +1,4 @@
-<form [formGroup]="form" class="client-form">
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="client-form">
   <div>
     <div class="client-form__section">
       <h3 class="client-form__section-header">Доходы\Расходы и имущество</h3>
@@ -42,14 +42,14 @@
 
       <mat-form-field appearance="outline" class="client-form__field">
         <mat-label>Общее количество должностей</mat-label>
-        <input matInput placeholder="шт." formControlName="spouseSalary" />
+        <input matInput placeholder="шт." formControlName="numberOfPositions" />
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="client-form__field">
         <mat-label>Род деятельности</mat-label>
         <mat-select formControlName="occupation" name="occupation">
-          <mat-option *ngFor="let occupation of occupations" [value]="occupation">
-            {{ occupation }}
+          <mat-option *ngFor="let occupation of occupations" [value]="occupation.coefficient">
+            {{ occupation.name }}
           </mat-option>
         </mat-select>
       </mat-form-field>
@@ -62,8 +62,8 @@
       <mat-form-field appearance="outline" class="client-form__field">
         <mat-label>Тип занимаемой должности</mat-label>
         <mat-select formControlName="jobType" name="jobType">
-          <mat-option *ngFor="let jobType of jobTypes" [value]="jobType">
-            {{ jobType }}
+          <mat-option *ngFor="let jobType of jobTypes" [value]="jobType.coefficient">
+            {{ jobType.name }}
           </mat-option>
         </mat-select>
       </mat-form-field>
@@ -71,8 +71,8 @@
       <mat-form-field appearance="outline" class="client-form__field">
         <mat-label>Стаж работы</mat-label>
         <mat-select formControlName="workExperience" name="workExperience">
-          <mat-option *ngFor="let workExperience of workExperiences" [value]="workExperience">
-            {{ workExperience }}
+          <mat-option *ngFor="let workExperience of workExperiences" [value]="workExperience.coefficient">
+            {{ workExperience.name }}
           </mat-option>
         </mat-select>
       </mat-form-field>
@@ -84,12 +84,12 @@
       <h3 class="client-form__section-header">Личные данные</h3>
       <mat-form-field appearance="outline" class="client-form__field">
         <mat-label>ФИО</mat-label>
-        <input matInput formControlName="name" />
+        <input required matInput formControlName="name" />
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="client-form__field">
         <mat-label>Пол</mat-label>
-        <mat-select formControlName="sex" name="sex">
+        <mat-select required formControlName="sex" name="sex">
           <mat-option *ngFor="let item of sex" [value]="item">
             {{ item }}
           </mat-option>
@@ -98,16 +98,16 @@
 
       <mat-form-field appearance="outline" class="client-form__field">
         <mat-label>Дата рождения</mat-label>
-        <input matInput [matDatepicker]="picker" formControlName="dateOfBirth" />
+        <input required matInput [matDatepicker]="picker" formControlName="dateOfBirth" />
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="client-form__field">
         <mat-label>Семейное положение</mat-label>
-        <mat-select formControlName="familyStatus" name="familyStatus">
-          <mat-option *ngFor="let familyStatus of familyStatuses" [value]="familyStatus">
-            {{ familyStatus }}
+        <mat-select required formControlName="familyStatus" name="familyStatus">
+          <mat-option *ngFor="let familyStatus of familyStatuses" [value]="familyStatus.coefficient">
+            {{ familyStatus.name }}
           </mat-option>
         </mat-select>
       </mat-form-field>
@@ -119,17 +119,17 @@
 
       <mat-form-field appearance="outline" class="client-form__field">
         <mat-label>Гражданство</mat-label>
-        <input matInput formControlName="citizenship" />
+        <input required matInput formControlName="citizenship" />
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="client-form__field">
         <mat-label>Город проживания</mat-label>
-        <input matInput placeholder="лет" formControlName="city" />
+        <input required matInput placeholder="лет" formControlName="city" />
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="client-form__field">
         <mat-label>Уровень образования</mat-label>
-        <mat-select formControlName="education" name="education">
+        <mat-select required formControlName="education" name="education">
           <mat-option *ngFor="let educationLevel of educationLevels" [value]="educationLevel">
             {{ educationLevel }}
           </mat-option>
@@ -138,7 +138,7 @@
 
       <mat-form-field appearance="outline" class="client-form__field">
         <mat-label>Срок проживания в регионе</mat-label>
-        <input matInput placeholder="лет" formControlName="lengthOfStay" />
+        <input required matInput placeholder="лет" formControlName="lengthOfStay" />
       </mat-form-field>
     </div>
 
@@ -157,16 +157,31 @@
 
     <div class="client-form__section">
       <h3 class="client-form__section-header">Дополнительная информация</h3>
-      <mat-checkbox color="primary" formControlName="earlyPayment"> Рассматривается выплата досрочно </mat-checkbox>
-      <mat-checkbox color="primary" formControlName="currentBankLoans"> Займы в текущем банке </mat-checkbox>
-      <mat-checkbox color="primary" formControlName="guarantorsAvailability"> Наличие поручителей </mat-checkbox>
-      <mat-checkbox color="primary" formControlName="debts"> Имелись задолженности </mat-checkbox>
+      <mat-checkbox color="primary" [value]="-20" (change)="handleCheck($event, 'earlyPayment')">
+        Рассматривается выплата досрочно
+      </mat-checkbox>
+      <mat-checkbox color="primary" [value]="30" (change)="handleCheck($event, 'currentBankLoans')">
+        Займы в текущем банке
+      </mat-checkbox>
+      <mat-checkbox color="primary" [value]="40" (change)="handleCheck($event, 'guarantorsAvailability')">
+        Наличие поручителей
+      </mat-checkbox>
+      <mat-checkbox color="primary" [value]="-60" (change)="handleCheck($event, 'debts')">
+        Имелись задолженности
+      </mat-checkbox>
     </div>
+
+    <mat-divider></mat-divider>
   </div>
 
   <div class="client-form__actions">
     <button mat-flat-button color="primary" class="client-form__action">Сохранить</button>
-    <button mat-button color="secondary" class="client-form__action" (click)="clearClientForm.emit(defaultFormData)">
+    <button
+      mat-button
+      color="secondary"
+      class="client-form__action"
+      (click)="clearClientForm.emit(defaultClientFormData)"
+    >
       отчистить
     </button>
   </div>

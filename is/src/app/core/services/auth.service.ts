@@ -1,8 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { IAuthData } from 'lib/interfaces/auth-data';
-import { IUser } from 'lib/interfaces/user.interface';
+import { IAuthData, IUser } from 'lib/interfaces';
 
 @Injectable()
 export class AuthService {

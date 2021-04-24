@@ -1,32 +1,42 @@
-<form [formGroup]="form" class="loan-form">
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="loan-form">
   <div>
     <div class="loan-form__section">
       <h2 class="loan-form__section-header">Данные по займу</h2>
       <mat-form-field appearance="outline" class="loan-form__field">
         <mat-label>Сумма займа</mat-label>
-        <input matInput placeholder="руб." formControlName="sum" />
+        <input matInput required placeholder="руб." formControlName="sum" />
+
+        <mat-error>Пожалуйста, заполните сумму займа</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="loan-form__field">
         <mat-label>Срок займа</mat-label>
-        <input matInput placeholder="мес." formControlName="term" />
+        <input matInput required placeholder="мес." formControlName="term" />
+
+        <mat-error>Пожалуйста, заполните срок займа</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="loan-form__field">
         <mat-label>Процентная ставка</mat-label>
-        <input matInput placeholder="руб." formControlName="interestRate" />
+        <input matInput required placeholder="руб." formControlName="interestRate" />
+
+        <mat-error>Пожалуйста, заполните процентную ставку</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="loan-form__field">
         <mat-label>Прожиточный минимум</mat-label>
-        <input matInput placeholder="руб." formControlName="livingWage" />
+        <input matInput required placeholder="руб." formControlName="livingWage" />
+
+        <mat-error>Пожалуйста, заполните прожиточный минимум</mat-error>
       </mat-form-field>
     </div>
+
+    <mat-divider></mat-divider>
   </div>
 
   <div class="loan-form__actions">
     <button mat-flat-button color="primary" class="loan-form__action">Рассчитать</button>
-    <button mat-button color="secondary" class="loan-form__action" (click)="clearClientForm.emit(defaultFormData)">
+    <button mat-button color="secondary" class="loan-form__action" (click)="clearLoanForm.emit(defaultFormData)">
       отчистить
     </button>
   </div>

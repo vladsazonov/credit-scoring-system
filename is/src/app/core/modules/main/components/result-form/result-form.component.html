@@ -1,38 +1,69 @@
-<div class="result-form__progress-container">
-  <mat-spinner mode="determinate" diameter="140" value="80" strokeWidth="4"></mat-spinner>
-  <p class="result-form__result">95%</p>
+<div *ngIf="resultData?.score; else emptyProgress">
+  <div class="result-form__progress-container">
+    <mat-spinner
+      class="result-form__progress"
+      mode="determinate"
+      diameter="140"
+      [value]="resultData?.score / 8.5"
+      strokeWidth="6"
+    ></mat-spinner>
+    <p class="result-form__result">
+      {{ resultData?.score / 8.5 > 100 ? '100' : (resultData?.score / 8.5 | currency: '':'':'0.0-0') }}
+      %
+    </p>
+  </div>
+  <p class="result-form__decision">
+    {{ resultData?.score / 8.5 > 65 ? 'МОЖЕТ БЫТЬ ОДОБРЕН' : 'НЕ МОЖЕТ БЫТЬ ОДОБРЕН' }}
+  </p>
 </div>
+
+<ng-template #emptyProgress>
+  <div class="result-form__progress-container">
+    <mat-spinner
+      class="result-form__progress_default"
+      mode="determinate"
+      diameter="140"
+      value="100"
+      strokeWidth="6"
+    ></mat-spinner>
+    <p class="result-form__result result-form__result_default">0%</p>
+  </div>
+  <p class="result-form__decision result-form__decision_default">НЕТ ДАННЫХ</p>
+</ng-template>
 
 <mat-divider class="result-form__divider"></mat-divider>
 
 <div class="result-form__sections-container">
   <div class="result-form__section">
-    <h4 class="result-form__section-header">Данные по займу</h4>
-    <h3>123123123</h3>
-  </div>
-
-  <div class="result-form__section">
     <h4 class="result-form__section-header">Процентная ставка</h4>
-    <h3>123123123</h3>
+    <h3>{{ resultData?.interestRate ? resultData?.interestRate + '%' : '-' }}</h3>
   </div>
 
   <div class="result-form__section">
-    <h4 class="result-form__section-header">Максимальная сумма кредита</h4>
-    <h3>123123123</h3>
+    <h4 class="result-form__section-header">Максимальная сумма займа</h4>
+    <h3>{{ resultData?.calcMaxCredit ? (resultData?.calcMaxCredit | currency: '':'':'0.0-0') + '₽' : '-' }}</h3>
   </div>
 
   <div class="result-form__section">
     <h4 class="result-form__section-header">Скоринговый балл</h4>
-    <h3>123123123</h3>
+    <h3>{{ resultData?.score || '-' }}</h3>
   </div>
 
   <div class="result-form__section">
     <h4 class="result-form__section-header">Коэффициент платежеспособности</h4>
-    <h3>123123123</h3>
+    <h3>{{ resultData?.calcSolvency ? (resultData?.calcSolvency | currency: '':'') : '-' }}</h3>
   </div>
 </div>
 
+<mat-divider></mat-divider>
+
 <div class="result-form__actions">
-  <button mat-flat-button color="primary" class="result-form__action">Рассчитать</button>
-  <button mat-button color="secondary" class="result-form__action" (click)="clearClientForm()">отчистить</button>
+  <button
+    mat-flat-button
+    color="primary"
+    class="result-form__action"
+    [disabled]="resultData?.score / 8.5 < 65 || !resultData?.score"
+  >
+    Одобрить
+  </button>
 </div>

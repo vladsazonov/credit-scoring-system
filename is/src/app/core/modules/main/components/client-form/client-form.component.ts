@@ -1,7 +1,16 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
-import { EDUCATION_LEVELS, FAMILY_STATUSES, JOB_TYPES, OCCUPATIONS, SEX, WORK_EXPERIENCES } from 'lib/constants';
+import {
+  DEFAULT_CLIENT_FORM_DATA,
+  EDUCATION_LEVELS,
+  FAMILY_STATUSES,
+  JOB_TYPES,
+  OCCUPATIONS,
+  SEX,
+  WORK_EXPERIENCES,
+} from 'lib/constants';
+import { isFormInvalid, markAllFieldsAsTouched } from 'lib/utils';
 
 @Component({
   selector: 'app-client-form',
@@ -14,44 +23,29 @@ export class ClientFormComponent implements OnInit {
 
   @Output() public clearClientForm = new EventEmitter();
 
-  public defaultFormData = {
-    salary: null,
-    spouseSalary: null,
-    otherRevenues: null,
-    totalPropertyCost: null,
-    totalCarCost: null,
-    mandatoryPayments: null,
-    totalWorkExperience: null,
-    numberOfPositions: null,
-    occupation: '',
-    position: '',
-    jobType: '',
-    workExperience: null,
-    name: '',
-    dateOfBirth: '',
-    sex: '',
-    familyStatus: '',
-    childrenCount: null,
-    citizenship: '',
-    city: '',
-    education: '',
-    lengthOfStay: null,
-    loanRepayments: null,
-    activeLoans: null,
-    earlyPayment: false,
-    currentBankLoans: false,
-    guarantorsAvailability: false,
-    debts: false
-  };
-
   public readonly occupations = OCCUPATIONS;
   public readonly jobTypes = JOB_TYPES;
   public readonly workExperiences = WORK_EXPERIENCES;
   public readonly sex = SEX;
   public readonly familyStatuses = FAMILY_STATUSES;
   public readonly educationLevels = EDUCATION_LEVELS;
+  public readonly defaultClientFormData = DEFAULT_CLIENT_FORM_DATA;
 
   constructor() {}
 
   public ngOnInit() {}
+
+  public handleCheck(event, field) {
+    console.log(event);
+
+    this.form.get(field).setValue(event.checked ? event.source.value : 0);
+  }
+
+  public onSubmit() {
+    markAllFieldsAsTouched(this.form);
+
+    if (isFormInvalid(this.form)) {
+      return;
+    }
+  }
 }

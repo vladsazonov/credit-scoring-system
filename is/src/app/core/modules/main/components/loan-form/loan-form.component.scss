@@ -16,16 +16,19 @@
     width: 100%;
 
     .mat-form-field-wrapper {
-      padding: 4px;
+      //padding: 4px;
     }
   }
 
   &__actions {
     display: flex;
     align-items: center;
+    width: 100%;
+    margin-top: 16px;
   }
 
   &__action:first-child {
+    background-color: #00e676;
     margin-right: 6px;
   }
 }

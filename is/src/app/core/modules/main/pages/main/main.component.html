@@ -1,28 +1,43 @@
 <mat-toolbar class="main__toolbar">
-  <mat-icon>menu</mat-icon>
-  <span class="main__spacer"></span>
+  <div class="main__logo-container">
+    <img src="../../../../../../assets/icons/splash.svg" class="main__logo" />
+  </div>
+  <span class="main__text">Vicly Score</span>
 
-  <span>Scoring.Me</span>
   <span class="main__spacer"></span>
+  <form [formGroup]="form" class="main__select">
+    <mat-select formControlName="clientId">
+      <mat-option [value]="defaultClient.id">{{ defaultClient.name }}</mat-option>
+      <mat-option *ngFor="let client of clients" [value]="client.id">
+        {{ client.name }}
+      </mat-option>
+    </mat-select>
+  </form>
 
-  <button mat-button (click)="onLogout()">выйти</button>
+  <div class="main__divider"></div>
+
+  <button mat-icon-button (click)="onLogout()" class="main__logout-button"><mat-icon>logout</mat-icon></button>
 </mat-toolbar>
 
 <div class="main__container">
   <div class="main__cards">
     <mat-card class="main__card main__card_client">
       <h2 class="main__card-header">Данные клиента</h2>
-      <app-client-form [form]="form" (clearClientForm)="onClearClientForm($event)"></app-client-form>
+      <app-client-form [form]="form" (clearClientForm)="onClearForm($event)"></app-client-form>
     </mat-card>
 
     <mat-card class="main__card main__card_loan">
       <h2 class="main__card-header">Займ</h2>
-      <app-loan-form [form]="form" (clearClientForm)="onClearClientForm($event)"></app-loan-form>
+      <app-loan-form
+        [form]="form"
+        (calculateRating)="onCalculateRating()"
+        (clearLoanForm)="onClearForm($event)"
+      ></app-loan-form>
     </mat-card>
 
-    <mat-card class="main__card main__card_score">
+    <mat-card class="main__card main__card_score" [ngClass]="{ main__card_score_visible: resultData?.score }">
       <h2 class="main__card-header">Скоринговый анализ</h2>
-      <app-result-form></app-result-form>
+      <app-result-form [resultData]="resultData"></app-result-form>
     </mat-card>
   </div>
   <!-- <ng-template #weatherLoading>
