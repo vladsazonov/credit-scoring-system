@@ -11,12 +11,75 @@ const users = [
 ];
 const authUsers = [];
 
+const clients = [
+  {
+    id: 1,
+    name: "Иванов В.В.",
+    info: {
+      // Revenues/expenses and property
+      salary: 60000,
+      spouseSalary: 30000,
+      otherRevenues: 15000,
+      totalPropertyCost: 2400000,
+      totalCarCost: 450000,
+      mandatoryPayments: 6300,
+
+      // Employment
+      totalWorkExperience: 10,
+      numberOfPositions: 2,
+      occupation: 21,
+      position: "Директор качества",
+      jobType: 2,
+      workExperience: 11,
+
+      // Personal information
+      name: "Иванов Владимир Владимирович",
+      dateOfBirth: "1991-01-01",
+      sex: "мужской",
+      familyStatus: 1,
+      childrenCount: 1,
+      citizenship: "РФ",
+      city: "Ростов-на-Дону",
+      education: 6,
+      lengthOfStay: 15,
+
+      // Credit info
+      loanRepayments: 4,
+      activeLoans: 1,
+    },
+  },
+];
+
 app.use(bodyParser.json());
 app.use(express.static(process.cwd() + "/is/dist/is/"));
 
 // app.get('/api/questions', (req, res) => {
 //   res.json(questions);
 // });
+
+app.get("/api/clients", (req, res) => {
+  res.json(clients);
+});
+
+app.post("/api/clients", (req, res) => {
+  const foundedClientIndex = clients.findIndex(
+    (client) => client.id === req.body.id
+  );
+
+  if (foundedClientIndex !== -1) {
+    clients[foundedClientIndex] = req.body.data;
+  } else {
+    const newClient = {
+      id: crypto.randomBytes(16).toString("hex"),
+      name: req.body.name,
+      info: req.body.info,
+    };
+
+    clients.push(newClient);
+  }
+
+  res.json(clients);
+});
 
 app.post("/api/login", (req, res) => {
   const user = users.find(

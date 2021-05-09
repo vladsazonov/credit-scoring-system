@@ -10,6 +10,7 @@ import { catchError, filter, tap } from 'rxjs/operators';
 
 import {
   CheckSession,
+  GetClients,
   Login,
   LoginFailed,
   LoginSuccess,
@@ -17,6 +18,7 @@ import {
   Register,
   RegisterFailed,
   RegisterSuccess,
+  SaveClientData,
 } from './auth.actions';
 import { AuthStateModel } from './auth.model';
 
@@ -25,7 +27,8 @@ import { AuthStateModel } from './auth.model';
   defaults: {
     user: null,
     isAuthed: false,
-    loading: false
+    loading: false,
+    clients: null
   }
 })
 @Injectable()
@@ -42,6 +45,10 @@ export class AuthState implements NgxsOnInit {
 
   @Selector() public static isAuthed({ isAuthed }: AuthStateModel) {
     return isAuthed;
+  }
+
+  @Selector() public static clients({ clients }: AuthStateModel) {
+    return clients;
   }
 
   public ngxsOnInit(ctx: StateContext<AuthStateModel>) {
@@ -114,6 +121,25 @@ export class AuthState implements NgxsOnInit {
       ctx.dispatch(new Logout());
     }
   }
+
+  @Action(GetClients)
+  public getClients(ctx: StateContext<AuthStateModel>) {
+    return this.authService.getClients().pipe(
+      tap(clients => {
+        ctx.patchState({ clients });
+      })
+    );
+  }
+
+  @Action(SaveClientData)
+  public saveClientData(ctx: StateContext<AuthStateModel>, { data }) {
+    return this.authService.saveClientData(data).pipe(
+      tap(clients => {
+        ctx.patchState({ clients });
+      })
+    );
+  }
+
   @Action(LoginSuccess)
   public onLoginSuccess(ctx: StateContext<AuthStateModel>) {
     // tslint:disable-next-line: no-console

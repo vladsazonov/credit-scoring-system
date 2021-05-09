@@ -51,7 +51,7 @@
 
   <div class="result-form__section">
     <h4 class="result-form__section-header">Коэффициент платежеспособности</h4>
-    <h3>{{ resultData?.calcSolvency ? (resultData?.calcSolvency | currency: '':'') : '-' }}</h3>
+    <h3>{{ resultData?.calcSolvency ? (resultData?.calcSolvency | solvencyRatio) : '-' }}</h3>
   </div>
 </div>
 
@@ -63,7 +63,10 @@
     color="primary"
     class="result-form__action"
     [disabled]="resultData?.score / 8.5 < 65 || !resultData?.score"
+    (click)="createApplication()"
   >
     Одобрить
   </button>
 </div>
+
+<h4 *ngIf="application" class="result-form__section-header">Заявка создана под номером: {{ application }}</h4>

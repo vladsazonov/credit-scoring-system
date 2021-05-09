@@ -3,12 +3,22 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { Logout } from 'app/core/state/auth-state/auth.actions';
+import { AuthState } from 'app/core/state/auth-state/auth.state';
 
-import { DEFAULT_CLIENT_FORM_DATA } from 'lib/constants';
-import { IResultData } from 'lib/interfaces';
+import {
+  DEFAULT_CLIENT_FORM_DATA,
+  EDUCATION_LEVELS,
+  FAMILY_STATUSES,
+  JOB_TYPES,
+  OCCUPATIONS,
+  SEX,
+  WORK_EXPERIENCES,
+} from 'lib/constants';
+import { IClient, IResultData } from 'lib/interfaces';
 
-import { Store } from '@ngxs/store';
+import { Select, Store } from '@ngxs/store';
 
+import { Observable } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 
 import { untilDestroyed } from 'ngx-take-until-destroy';
@@ -19,24 +29,29 @@ import { untilDestroyed } from 'ngx-take-until-destroy';
   styleUrls: ['main.component.scss']
 })
 export class MainPageComponent implements OnInit, OnDestroy {
+  @Select(AuthState.clients) public clients$: Observable<IClient[]>;
+
   public form: FormGroup;
   public resultData: IResultData;
+  public clients: IClient[];
 
   public defaultClient = {
     id: 0,
     name: 'Новый клиент'
   };
 
-  public clients = [
-    { id: 1, name: 'lol', info: { name: 'lol' } },
-    { id: 2, name: 'kek', info: { name: 'kek' } }
-  ];
-
+  public readonly occupations = OCCUPATIONS;
+  public readonly jobTypes = JOB_TYPES;
+  public readonly workExperiences = WORK_EXPERIENCES;
+  public readonly sex = SEX;
+  public readonly familyStatuses = FAMILY_STATUSES;
+  public readonly educationLevels = EDUCATION_LEVELS;
   public readonly defaultClientFormData = DEFAULT_CLIENT_FORM_DATA;
 
   constructor(private store: Store, private router: Router, private formBuilder: FormBuilder) {}
 
   public ngOnInit() {
+    this.clients$.pipe(untilDestroyed(this)).subscribe(value => (this.clients = value));
     this.createForm();
   }
 
@@ -62,7 +77,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
 
       // Personal information
       name: '',
-      dateOfBirth: '',
+      dateOfBirth: null,
       sex: '',
       familyStatus: [null, Validators.required],
       childrenCount: null,
@@ -96,11 +111,20 @@ export class MainPageComponent implements OnInit, OnDestroy {
       .subscribe(value => {
         const clientInfo = this.clients.find(item => item.id === value)?.info;
 
-        if (value === 0) {
-          this.form.patchValue(this.defaultClientFormData);
-        } else if (clientInfo) {
+        this.form.patchValue(this.defaultClientFormData);
+
+        if (clientInfo) {
+          const formData = {
+            ...clientInfo
+            // ...(clientInfo.dateOfBirth && { dateOfBirth: Date.parse(clientInfo.dateOfBirth) })
+          };
+
+          // Object.keys(clientInfo).forEach(filed =>
+          //   this.form.get(filed).setValue(clientInfo[filed]?.name || clientInfo[filed])
+          // );
+
           this.form.patchValue({
-            name: clientInfo.name
+            ...formData
           });
         }
       });
@@ -109,7 +133,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
   public onClearForm(fields) {
     this.form.patchValue(fields);
 
-    this.resultData = {};
+    this.resultData = null;
   }
 
   public onLogout() {
@@ -136,12 +160,16 @@ export class MainPageComponent implements OnInit, OnDestroy {
       occupation,
       jobType,
       workExperience,
-      familyStatus
+      familyStatus,
+      education,
+      lengthOfStay,
+      loanRepayments,
+      activeLoans
     } = this.form.value;
 
-    const calcLivingWage = (livingWage || 0) + (childrenCount || 0);
+    const calcLivingWage = (livingWage || 0) * (childrenCount || 1);
     const calcNetIncome = (salary || 0) * 0.87 - (mandatoryPayments || 0) - calcLivingWage + (otherRevenues || 0);
-    const calcSolvency = calcNetIncome * 0.6 + (term || 0);
+    const calcSolvency = calcNetIncome * 0.6 * (term || 0);
 
     let calcMaxCredit = 0;
     let score =
@@ -150,11 +178,15 @@ export class MainPageComponent implements OnInit, OnDestroy {
       (guarantorsAvailability || 0) +
       (debts || 0) +
       (totalWorkExperience || 0) * 1.5 +
-      (occupation || 0) +
+      (this.getCoefficient('occupation', occupation) || 0) +
       (numberOfPositions || 0) * 0.4 +
-      (jobType || 0) +
-      (workExperience || 0) +
-      (familyStatus || 0);
+      (this.getCoefficient('jobType', jobType) || 0) +
+      (this.getCoefficient('workExperience', workExperience) || 0) +
+      (this.getCoefficient('familyStatus', familyStatus) || 0) +
+      (this.getCoefficient('education', education) || 0) +
+      (lengthOfStay || 1) * 0.8 +
+      (loanRepayments || 0) * 10 +
+      (activeLoans || 0) * 3.1;
 
     if (calcSolvency > 0) {
       calcMaxCredit = calcSolvency / (1 + (((term || 0) + 1) * (interestRate || 0)) / 2400);
@@ -162,5 +194,32 @@ export class MainPageComponent implements OnInit, OnDestroy {
     }
 
     this.resultData = { calcLivingWage, calcNetIncome, calcSolvency, calcMaxCredit, interestRate, score };
+  }
+
+  private getCoefficient(field, id): number {
+    switch (field) {
+      case 'occupation': {
+        return this.occupations.find(item => item.id === id)?.coefficient;
+      }
+
+      case 'jobType': {
+        return this.jobTypes.find(item => item.id === id)?.coefficient;
+      }
+
+      case 'workExperience': {
+        return this.workExperiences.find(item => item.id === id)?.coefficient;
+      }
+
+      case 'familyStatus': {
+        return this.familyStatuses.find(item => item.id === id)?.coefficient;
+      }
+
+      case 'education': {
+        return this.educationLevels.find(item => item.id === id)?.coefficient;
+      }
+
+      default:
+        return null;
+    }
   }
 }

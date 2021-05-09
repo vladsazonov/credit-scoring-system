@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
+import { SaveClientData } from 'app/core/state/auth-state/auth.actions';
+
 import {
   DEFAULT_CLIENT_FORM_DATA,
   EDUCATION_LEVELS,
@@ -10,7 +12,9 @@ import {
   SEX,
   WORK_EXPERIENCES,
 } from 'lib/constants';
-import { isFormInvalid, markAllFieldsAsTouched } from 'lib/utils';
+import { markAllFieldsAsTouched } from 'lib/utils';
+
+import { Store } from '@ngxs/store';
 
 @Component({
   selector: 'app-client-form',
@@ -31,21 +35,23 @@ export class ClientFormComponent implements OnInit {
   public readonly educationLevels = EDUCATION_LEVELS;
   public readonly defaultClientFormData = DEFAULT_CLIENT_FORM_DATA;
 
-  constructor() {}
+  constructor(private store: Store) {}
 
   public ngOnInit() {}
 
   public handleCheck(event, field) {
-    console.log(event);
-
     this.form.get(field).setValue(event.checked ? event.source.value : 0);
   }
 
   public onSubmit() {
     markAllFieldsAsTouched(this.form);
 
-    if (isFormInvalid(this.form)) {
-      return;
-    }
+    // if (isFormInvalid(this.form)) {
+    //   return;
+    // }
+
+    const { clientId: clientIdValue, ...formData } = this.form.value;
+
+    this.store.dispatch(new SaveClientData({ id: clientIdValue, name: formData.name, info: formData }));
   }
 }

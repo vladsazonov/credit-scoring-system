@@ -48,7 +48,7 @@
       <mat-form-field appearance="outline" class="client-form__field">
         <mat-label>Род деятельности</mat-label>
         <mat-select formControlName="occupation" name="occupation">
-          <mat-option *ngFor="let occupation of occupations" [value]="occupation.coefficient">
+          <mat-option *ngFor="let occupation of occupations" [value]="occupation.id">
             {{ occupation.name }}
           </mat-option>
         </mat-select>
@@ -62,7 +62,7 @@
       <mat-form-field appearance="outline" class="client-form__field">
         <mat-label>Тип занимаемой должности</mat-label>
         <mat-select formControlName="jobType" name="jobType">
-          <mat-option *ngFor="let jobType of jobTypes" [value]="jobType.coefficient">
+          <mat-option *ngFor="let jobType of jobTypes" [value]="jobType.id">
             {{ jobType.name }}
           </mat-option>
         </mat-select>
@@ -71,7 +71,7 @@
       <mat-form-field appearance="outline" class="client-form__field">
         <mat-label>Стаж работы</mat-label>
         <mat-select formControlName="workExperience" name="workExperience">
-          <mat-option *ngFor="let workExperience of workExperiences" [value]="workExperience.coefficient">
+          <mat-option *ngFor="let workExperience of workExperiences" [value]="workExperience.id">
             {{ workExperience.name }}
           </mat-option>
         </mat-select>
@@ -106,7 +106,7 @@
       <mat-form-field appearance="outline" class="client-form__field">
         <mat-label>Семейное положение</mat-label>
         <mat-select required formControlName="familyStatus" name="familyStatus">
-          <mat-option *ngFor="let familyStatus of familyStatuses" [value]="familyStatus.coefficient">
+          <mat-option *ngFor="let familyStatus of familyStatuses" [value]="familyStatus.id">
             {{ familyStatus.name }}
           </mat-option>
         </mat-select>
@@ -130,8 +130,8 @@
       <mat-form-field appearance="outline" class="client-form__field">
         <mat-label>Уровень образования</mat-label>
         <mat-select required formControlName="education" name="education">
-          <mat-option *ngFor="let educationLevel of educationLevels" [value]="educationLevel">
-            {{ educationLevel }}
+          <mat-option *ngFor="let educationLevel of educationLevels" [value]="educationLevel.id">
+            {{ educationLevel.name }}
           </mat-option>
         </mat-select>
       </mat-form-field>

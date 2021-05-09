@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 
+import { IClient } from 'lib/interfaces';
 import { IAuthData } from 'lib/interfaces/auth-data.interface';
 
 export class Login {
@@ -18,6 +19,15 @@ export class Logout {
 
 export class CheckSession {
   public static readonly type = '[Auth] CheckSession';
+}
+
+export class GetClients {
+  public static readonly type = '[Auth] GetClients';
+}
+
+export class SaveClientData {
+  public static readonly type = '[Auth] SaveClientData';
+  constructor(public readonly data: IClient) {}
 }
 
 export class LoginSuccess {

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { IAuthData, IUser } from 'lib/interfaces';
+import { IAuthData, IClient, IUser } from 'lib/interfaces';
 
 @Injectable()
 export class AuthService {
@@ -21,5 +21,13 @@ export class AuthService {
 
   public logout(userId: string) {
     return this.httpClient.post<IUser>('/api/logout', { userId });
+  }
+
+  public getClients() {
+    return this.httpClient.get<IClient[]>('/api/clients');
+  }
+
+  public saveClientData(data: IClient) {
+    return this.httpClient.post<IClient[]>('/api/clients', data);
   }
 }
